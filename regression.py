@@ -1,19 +1,22 @@
-from sklearn.datasets import fetch_mldata
+# from sklearn.datasets import fetch_mldata
+from sklearn.datasets import fetch_openml
 from sklearn.preprocessing import MinMaxScaler
 from deps.decorators.decorators import my_timer, my_logger
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import confusion_matrix, classification_report
+from sklearn import datasets
 import numpy as np
 
 def download():
-    mnist = fetch_mldata('MNIST original')
+    mnist = fetch_openml('mnist_784', version=1, cache=True) # fetch_mldata('MNIST original')
     X = mnist.data.astype('float64')
     y = mnist.target
     return (X, y)
 
 def getdata():
-    X = []
-    y = []
+    iris = datasets.load_iris()
+    X = iris.data
+    y = iris.target
     return (X, y)
 
 class Normalize(object):
@@ -75,10 +78,13 @@ class TheAlgorithm(object):
 
 
 if __name__ == '__main__':
-    X, y = download()
-    print('MNIST:', X.shape, y.shape)
+    # X, y = download()
+    X, y = getdata()
+    # print('MNIST:', X.shape, y.shape)
+    print('IRIS:', X.shape, y.shape)
 
-    splitRatio = 60000
+    # splitRatio = 60000
+    splitRatio = 100
     X_train, y_train, X_test, y_test = split(X, y, splitRatio)
 
     np.random.seed(31337)
